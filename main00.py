@@ -10,7 +10,7 @@ pygame.init()
 # 设置游戏窗口
 WIDTH, HEIGHT = 1200, 675
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("接食物游戏")
+pygame.display.set_caption("Margarete Catch Food")
 
 # 加载背景图片
 background = pygame.image.load("background.png")
@@ -46,18 +46,18 @@ character_image = right_image  # 初始方向为右
 # 定义食物和角色的参数
 food_width, food_height = 40, 40
 character_width, character_height = character_image.get_width(), character_image.get_height()
-character_speed = 10
+character_speed = 15
 
 
 # 游戏状态和得分
 score = 0
 high_score = 0
-time_limit = 3
+time_limit = 30
 is_paused = False
 game_over = False
 
 # 设置食物图片的宽度
-food_width = 100
+food_width = 150
 # 获取食物图片并生成分数规则
 food_images = {}
 for file in os.listdir("pics"):
@@ -77,14 +77,17 @@ def create_food():
     x = random.randint(0, WIDTH - food_width)
     y = 0 - food_height
     speed = random.randint(10, 20)  
-    image_name = random.choices(list(food_images.keys()), weights=[60, 30, 10], k=1)[0]
+    image_name = random.choices(list(food_images.keys()), weights=[70, 20, 10], k=1)[0]
+    
+    
+    
     return pygame.Rect(x, y, food_width, food_height), food_images[image_name], speed, int(image_name.split(".")[0])
 
 foods = [create_food() for _ in range(10)]  # 同时生成10个食物
 
 # 创建按钮
 class Button:
-    def __init__(self, text, pos, size, color=BLACK, bgcolor=(255, 255, 255, 200)):
+    def __init__(self, text, pos, size, color=BLACK, bgcolor=(205, 205, 100, 200)):
         self.text = text
         self.rect = pygame.Rect(pos, size)
         self.color = color
@@ -103,9 +106,9 @@ class Button:
         return self.rect.collidepoint(mouse_pos)
 
 # 定义按钮
-start_button = Button("开始游戏", (WIDTH // 2 - 50, HEIGHT // 2 - 80), (100, 40))
-rules_button = Button("规则说明", (WIDTH // 2 - 50, HEIGHT // 2), (100, 40))
-quit_button = Button("退出", (WIDTH // 2 - 50, HEIGHT // 2 + 80), (100, 40))
+start_button = Button("Start Game", (WIDTH // 2 - 100, HEIGHT // 2 - 80), (200, 40))
+rules_button = Button("Game Rules", (WIDTH // 2 - 100, HEIGHT // 2), (200, 40))
+quit_button = Button("Exit", (WIDTH // 2 - 50, HEIGHT // 2 + 80), (100, 40))
 
 # 游戏首页
 def game_home():
@@ -118,17 +121,41 @@ def game_home():
     pygame.display.flip()
 
 # 在规则说明界面中添加返回按钮
-back_button = Button("返回", (WIDTH // 2 - 50, HEIGHT // 2 + 80), (100, 40))
+back_button = Button("Back", (WIDTH // 2 - 50, HEIGHT // 2 + 80), (100, 40))
 
 # 修改规则说明函数 show_rules()
 def show_rules():
     # 创建一个新的规则窗口
     rule_screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    rule_screen.fill(WHITE)  # 设置背景颜色或加载背景图
 
-    # 显示规则说明文本
-    rules_text = font.render("规则说明：接住掉下的食物获得分数。10分食物最常见。", True, BLACK)
-    rule_screen.blit(rules_text, (WIDTH // 2 - rules_text.get_width() // 2, HEIGHT // 3))
+    # 加载背景图片
+    background_image = pygame.image.load('rules_background.png')
+
+    # 获取背景图片的尺寸
+    background_width, background_height = background_image.get_size()
+
+    # 计算缩放后的尺寸，保持长宽比例不变
+    scale_factor = min(WIDTH / background_width, HEIGHT / background_height)
+    background_width = int(background_width * scale_factor)
+    background_height = int(background_height * scale_factor)
+
+    # 缩放背景图片
+    background_image = pygame.transform.scale(background_image, (background_width, background_height))
+
+    # 在屏幕上绘制背景图片
+    rule_screen.blit(background_image, (0, 0))
+
+    # 获取按钮的尺寸
+    button_width, button_height = back_button.rect.size
+
+    # 计算按钮的位置
+    button_x = WIDTH - button_width - 10  # 10 是按钮与屏幕右边缘的距离
+    button_y = HEIGHT - button_height - 10  # 10 是按钮与屏幕下边缘的距离
+
+    # 在屏幕上绘制按钮
+    back_button.rect.topleft = (button_x, button_y)
+    back_button.draw(rule_screen)
+
 
     # 显示返回按钮
     back_button.draw(rule_screen)
@@ -186,21 +213,21 @@ def game_over_screen():
     
     
     # 显示游戏结束信息和分数
-    over_text = large_font.render("游戏结束", True, BLACK)
-    score_text = font.render(f"本局得分: {score}", True, BLACK)
-    high_score_text = font.render(f"最高得分: {high_score}", True, BLACK)
+    over_text = large_font.render("Game Over!", True, BLACK)
+    score_text = font.render(f"Score in this game: {score}", True, BLACK)
+    high_score_text = font.render(f"All-time high: {high_score}", True, BLACK)
 
     popup_screen.blit(over_text, (popup_width // 2 - over_text.get_width() // 2, 60))
     popup_screen.blit(score_text, (popup_width // 2 - score_text.get_width() // 2, 120))
     popup_screen.blit(high_score_text, (popup_width // 2 - high_score_text.get_width() // 2, 160))
     
     # 创建重新游戏按钮
-    restart_button = Button("再来一次", (WIDTH // 2 - 50, HEIGHT // 2 + 120), (100, 40))
-    restart_button.rect.topleft = (popup_width // 2 - 50, 220)  # 将按钮定位在弹窗内
+    restart_button = Button("Play Again", (WIDTH // 2 - 50, HEIGHT // 2 + 120), (140, 40))
+    restart_button.rect.topleft = (popup_width // 2 - 70, 220)  # 将按钮定位在弹窗内
     restart_button.draw(popup_screen)
 
     # 定义退出按钮
-    exit_button = Button("退出", (WIDTH // 2 - 50, HEIGHT // 2 + 80), (100, 40))
+    exit_button = Button("Exit", (WIDTH // 2 - 50, HEIGHT // 2 + 80), (100, 40))
     exit_button.rect.topleft = (popup_width // 2 - 50, 300)  # 将按钮定位在弹窗内
     exit_button.draw(popup_screen)
 
@@ -246,7 +273,7 @@ pygame.mixer.music.play(-1)  # 循环播放音乐
 # pygame.mixer.music.set_volume(0.3)  # 设置背景音乐音量，0.3表示稍微调小音量
 
 # 右上角的暂停按钮
-pause_button = Button("暂停", (WIDTH - 110, 10), (100, 40))
+pause_button = Button("Pause", (WIDTH - 110, 10), (100, 40))
 
 
 
@@ -285,14 +312,14 @@ def show_pause_menu():
     # 创建暂停弹窗
     popup_screen = pygame.Surface((popup_width, popup_height), pygame.SRCALPHA)
     popup_screen.fill(WHITE)
-    pause_text = font.render("游戏暂停", True, BLACK)
-    volume_text = font.render("背景音乐音量:", True, BLACK)
+    pause_text = font.render("Settings", True, BLACK)
+    volume_text = font.render("Music Volume", True, BLACK)
 
     # 音量调节滑块初始值
     volume_level = int(pygame.mixer.music.get_volume() * 100)
 
     # 创建返回游戏按钮
-    resume_button = Button("返回游戏", (popup_x + popup_width // 2 - 50, popup_y + popup_height - 60), (100, 40))
+    resume_button = Button("Continue", (popup_x + popup_width // 2 - 70, popup_y + popup_height - 60), (140, 40))
 
     def draw_volume_slider():
         pygame.draw.line(popup_screen, BLACK, (50, 120), (250, 120), 3)  # 滑块背景线
