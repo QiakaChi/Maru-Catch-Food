@@ -21,8 +21,8 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 # 加载字体（确保字体文件“msyh.ttf”在当前目录中）
-font = pygame.font.Font("fonts/msyh.ttf", 24)
-large_font = pygame.font.Font("fonts/msyh.ttf", 36)
+font = pygame.font.Font("resources/fonts/msyh.ttf", 24)
+large_font = pygame.font.Font("resources/fonts/msyh.ttf", 36)
 
 # 设置角色图片的宽度
 character_width = 300
