@@ -13,7 +13,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Margarete Catch Food")
 
 # 加载背景图片
-background = pygame.image.load("background.png")
+background = pygame.image.load("resources/pics/bg/background.png")
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
 # 定义颜色
@@ -28,8 +28,8 @@ large_font = pygame.font.Font("fonts/msyh.ttf", 36)
 character_width = 300
 
 # 加载角色图片
-left_image = pygame.image.load("left.png")
-right_image = pygame.image.load("right.png")
+left_image = pygame.image.load("resources/pics/character/left.png")
+right_image = pygame.image.load("resources/pics/character/right.png")
 
 # 计算缩放后的高度，保持长宽比例不变
 original_width, original_height = left_image.get_size()
@@ -60,9 +60,9 @@ game_over = False
 food_width = 150
 # 获取食物图片并生成分数规则
 food_images = {}
-for file in os.listdir("pics"):
+for file in os.listdir("resources/pics/food"):
     if file.endswith(".png"):
-        image = pygame.image.load(os.path.join("pics", file))
+        image = pygame.image.load(os.path.join("resources/pics/food", file))
         # 计算缩放后的高度，保持长宽比例不变
         original_width, original_height = image.get_size()
         food_height = int(original_height * (food_width / original_width))
@@ -129,7 +129,7 @@ def show_rules():
     rule_screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
     # 加载背景图片
-    background_image = pygame.image.load('rules_background.png')
+    background_image = pygame.image.load('resources/pics/bg/rules_background.png')
 
     # 获取背景图片的尺寸
     background_width, background_height = background_image.get_size()
@@ -184,8 +184,8 @@ def reset_game():
     foods = [create_food() for _ in range(10)]  # 清空食物并重新生成
 
 
-game_over_sound = pygame.mixer.Sound("game_over_sound.mp3")  # 通关音效
-game_over_background = pygame.image.load("end_background.png") # 通关背景图
+game_over_sound = pygame.mixer.Sound("resources/audio/game_over_sound.mp3")  # 通关音效
+game_over_background = pygame.image.load("resources/pics/bg/end_background.png") # 通关背景图
 bg_width, bg_height = game_over_background.get_size()
 
 # 设定弹窗的宽度或高度，根据比例计算另一个维度
@@ -268,7 +268,7 @@ def game_over_screen():
         pygame.display.flip()
 
 # 加载音乐
-pygame.mixer.music.load("background_music.mp3")
+pygame.mixer.music.load("resources/audio/background_music.mp3")
 pygame.mixer.music.play(-1)  # 循环播放音乐
 # pygame.mixer.music.set_volume(0.3)  # 设置背景音乐音量，0.3表示稍微调小音量
 
@@ -279,9 +279,9 @@ pause_button = Button("Pause", (WIDTH - 110, 10), (100, 40))
 
 # 加载音频文件
 direction_sounds = [
-    pygame.mixer.Sound("direction_change-1.mp3"),
-    pygame.mixer.Sound("direction_change-2.mp3"),
-    pygame.mixer.Sound("direction_change-3.mp3")
+    pygame.mixer.Sound("resources/audio/direction_change-1.mp3"),
+    pygame.mixer.Sound("resources/audio/direction_change-2.mp3"),
+    pygame.mixer.Sound("resources/audio/direction_change-3.mp3")
 ]
 sound_index = 0  # 音频播放索引
 previous_direction = None  # 上一次的方向（'left' or 'right'）
