@@ -3,6 +3,62 @@ import random
 import os
 import time
 
+import os
+import sys
+import pygame
+
+# 获取资源文件的路径
+if getattr(sys, 'frozen', False):
+    # 如果程序是打包后的应用
+    app_path = sys._MEIPASS
+else:
+    # 如果程序是源码模式下运行
+    app_path = os.path.dirname(os.path.abspath(__file__))
+
+# 构建资源文件的完整路径
+def get_resource_path(relative_path):
+    """返回资源文件的完整路径"""
+    return os.path.join(app_path, 'resources', relative_path)
+
+# 加载图片资源
+bg_image_path = get_resource_path('pics/bg/background.png')
+end_bg_image_path = get_resource_path('pics/bg/end_background.png')
+rules_bg_image_path = get_resource_path('pics/bg/rules_background.png')
+left_char_image_path = get_resource_path('pics/character/left.png')
+right_char_image_path = get_resource_path('pics/character/right.png')
+food_image_10_path = get_resource_path('pics/food/10.png')
+food_image_20_path = get_resource_path('pics/food/20.png')
+food_image_50_path = get_resource_path('pics/food/50.png')
+
+# 加载音频资源
+bg_music_path = get_resource_path('audio/background_music.mp3')
+direction_change_path_1 = get_resource_path('audio/direction_change-1.mp3')
+direction_change_path_2 = get_resource_path('audio/direction_change-2.mp3')
+direction_change_path_3 = get_resource_path('audio/direction_change-3.mp3')
+direction_change_path = get_resource_path('audio/direction_change.mp3')
+game_over_sound_path = get_resource_path('audio/game_over_sound.mp3')
+
+# 加载字体资源
+font_path = get_resource_path('fonts/msyh.ttf')
+
+# 加载游戏资源（例如，使用 Pygame）
+bg_image = pygame.image.load(bg_image_path)
+left_char_image = pygame.image.load(left_char_image_path)
+right_char_image = pygame.image.load(right_char_image_path)
+food_image_10 = pygame.image.load(food_image_10_path)
+
+# 加载音频
+pygame.mixer.init()
+pygame.mixer.music.load(bg_music_path)
+
+# 加载字体
+# font = pygame.font.Font(font_path, 36)
+
+
+
+###################################################
+
+
 # 初始化Pygame
 pygame.init()
 
@@ -13,7 +69,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Margarete Catch Food")
 
 # 加载背景图片
-background = pygame.image.load("resources/pics/bg/background.png")
+background = pygame.image.load(get_resource_path("pics/bg/background.png"))
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
 # 定义颜色
@@ -21,15 +77,15 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 # 加载字体（确保字体文件“msyh.ttf”在当前目录中）
-font = pygame.font.Font("resources/fonts/msyh.ttf", 24)
-large_font = pygame.font.Font("resources/fonts/msyh.ttf", 36)
+font = pygame.font.Font(get_resource_path("fonts/msyh.ttf"), 24)
+large_font = pygame.font.Font(get_resource_path("fonts/msyh.ttf"), 36)
 
 # 设置角色图片的宽度
 character_width = 300
 
 # 加载角色图片
-left_image = pygame.image.load("resources/pics/character/left.png")
-right_image = pygame.image.load("resources/pics/character/right.png")
+left_image = pygame.image.load(get_resource_path("pics/character/left.png"))
+right_image = pygame.image.load(get_resource_path("pics/character/right.png"))
 
 # 计算缩放后的高度，保持长宽比例不变
 original_width, original_height = left_image.get_size()
@@ -60,9 +116,9 @@ game_over = False
 food_width = 150
 # 获取食物图片并生成分数规则
 food_images = {}
-for file in os.listdir("resources/pics/food"):
+for file in os.listdir(get_resource_path("pics/food")):
     if file.endswith(".png"):
-        image = pygame.image.load(os.path.join("resources/pics/food", file))
+        image = pygame.image.load(os.path.join(get_resource_path("pics/food"), file))
         # 计算缩放后的高度，保持长宽比例不变
         original_width, original_height = image.get_size()
         food_height = int(original_height * (food_width / original_width))
@@ -129,7 +185,7 @@ def show_rules():
     rule_screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
     # 加载背景图片
-    background_image = pygame.image.load('resources/pics/bg/rules_background.png')
+    background_image = pygame.image.load(get_resource_path("pics/bg/rules_background.png"))
 
     # 获取背景图片的尺寸
     background_width, background_height = background_image.get_size()
@@ -184,8 +240,8 @@ def reset_game():
     foods = [create_food() for _ in range(10)]  # 清空食物并重新生成
 
 
-game_over_sound = pygame.mixer.Sound("resources/audio/game_over_sound.mp3")  # 通关音效
-game_over_background = pygame.image.load("resources/pics/bg/end_background.png") # 通关背景图
+game_over_sound = pygame.mixer.Sound(get_resource_path("audio/game_over_sound.mp3"))  # 通关音效
+game_over_background = pygame.image.load(get_resource_path("pics/bg/end_background.png"))# 通关背景图
 bg_width, bg_height = game_over_background.get_size()
 
 # 设定弹窗的宽度或高度，根据比例计算另一个维度
@@ -268,7 +324,7 @@ def game_over_screen():
         pygame.display.flip()
 
 # 加载音乐
-pygame.mixer.music.load("resources/audio/background_music.mp3")
+pygame.mixer.music.load(get_resource_path("audio/background_music.mp3"))
 pygame.mixer.music.play(-1)  # 循环播放音乐
 # pygame.mixer.music.set_volume(0.3)  # 设置背景音乐音量，0.3表示稍微调小音量
 
@@ -279,9 +335,9 @@ pause_button = Button("Pause", (WIDTH - 110, 10), (100, 40))
 
 # 加载音频文件
 direction_sounds = [
-    pygame.mixer.Sound("resources/audio/direction_change-1.mp3"),
-    pygame.mixer.Sound("resources/audio/direction_change-2.mp3"),
-    pygame.mixer.Sound("resources/audio/direction_change-3.mp3")
+    pygame.mixer.Sound(get_resource_path("audio/direction_change-1.mp3")),
+    pygame.mixer.Sound(get_resource_path("audio/direction_change-2.mp3")),
+    pygame.mixer.Sound(get_resource_path("audio/direction_change-3.mp3"))
 ]
 sound_index = 0  # 音频播放索引
 previous_direction = None  # 上一次的方向（'left' or 'right'）
