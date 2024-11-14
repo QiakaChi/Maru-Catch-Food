@@ -7,7 +7,13 @@
 在30秒的时间内通过左右箭头键控制玛格丽特同学接住掉落的食物，每接住一个食物获得一定分数，尽量多接住食物以获得更高的分数。
 
 ## 快速开始
-如想快速体验游戏（而不关注代码实现），可以直接下载 [Release](https://github.com/QiakaChi/Maru-Catch-Food/releases/tag/v1.0) 页面中的压缩包`Margarete-Catch-Food.zip`，解压后运行`main.exe`即可。
+如想快速体验游戏（而不关注代码实现），可以参考 [Release](https://github.com/QiakaChi/Maru-Catch-Food/releases/tag/v1.0) 页面：
+
+#### Windows
+- 直接下载Release页面下的`main.exe` 文件，或者下载 `Margarete-Catch-Food-1.0.0-Windows-x64.zip` 压缩包并解压，运行`main.exe` 文件。
+
+#### macOS
+- 下载并解压`Margarete-Catch-Food-1.0.0-macOS-x64.zip`压缩包，进入`main`文件夹，找到`main`应用程序并运行。
 
 ## 安装和运行
 - Python 3.8
